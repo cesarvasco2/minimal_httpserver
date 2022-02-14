@@ -17,7 +17,7 @@ client = mqtt.Client()
 client.username_pw_set(Usuario, Senha)
 client.connect(Broker, PortaBroker, KeepAliveBroker)
 client.loop_start()
-topic = 'httpserver/'
+topic = 'httpserver/message'
 class S(BaseHTTPRequestHandler):
     def _set_response(self):
         self.send_response(200)
