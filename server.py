@@ -13,7 +13,11 @@ PortaBroker = 1883
 Usuario = 'ghidro'
 Senha = 'ghidro'
 KeepAliveBroker = 60
-
+client = mqtt.Client()
+client.username_pw_set(Usuario, Senha)
+client.connect(Broker, PortaBroker, KeepAliveBroker)
+client.loop_start()
+topic = 'httpserver/'
 class S(BaseHTTPRequestHandler):
     def _set_response(self):
         self.send_response(200)
@@ -30,7 +34,7 @@ class S(BaseHTTPRequestHandler):
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
         logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
                 str(self.path), str(self.headers), post_data.decode('utf-8'))
-
+        connected = client.publish(topic,post_data.decode('utf-8'), qos=0, retain=False)   
         self._set_response()
         self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 
